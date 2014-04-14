@@ -1,0 +1,26 @@
+#app{
+    border:2px solid red;
+    height:700px;
+    width:1500px;
+}
+
+#menu{
+    border:1px solid green;
+    height:50px;
+    width:100%;
+    margin-top:0px;
+}
+
+#dates{
+    border:1px solid blue;
+    height:50px;
+    width:100%;
+    margin-top:0px;
+}
+
+#kalendar{
+    border:1px solid black;
+    height:600px;
+    width:100%;
+    margin-top:0px;
+}
