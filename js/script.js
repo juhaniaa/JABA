@@ -1,37 +1,85 @@
 "use strict";
-$(function(){
-    var $weekButton = $("<div class='button'>Vecka</div>");
-    var $monthButton = $("<div class='button'>Månad</div>");
-    var $prevButton = $("<div class='button'>Prev</div>");
-    var $dateString = $("<div class='button'>"+ getMenuDateString(1) +"</div>");
-    var $nextButton = $("<div class='button'>Next</div>");
-    var $todayButton = $("<div class='button'>Idag</div>");
-    var $newBookingButton = $("<div class='button'>Ny bokning</div>");
-    var $thingsToAdd = $weekButton.add($monthButton).add($prevButton).add($dateString).add($nextButton).add($todayButton).add($newBookingButton);
-    $("#menu").append($thingsToAdd);
-    
-    $("#dates").append(getMenuDateString(2));
+$(document).ready(function(){
+    refresh(new Date());
 });
 
-function getMenuDateString(choice){
-    var date = new Date('2014','03','01');
+function refresh(updateDate){
+    $("#menu, #dates, #calendar").empty();
     
+    /* Knappar för att ändra mellan vecko- och månads-VY */
+    var $weekButton = $("<div class='button'>Vecka</div>");
+    $weekButton.appendTo("#menu");
+    var $monthButton = $("<div class='button'>Månad</div>");
+    $monthButton.appendTo("#menu");
+    
+    /* Knapp för att flippa till FÖREGÅENDE vecka */
+    var $prevButton = $("<div class='button'>Prev</div>");
+    $prevButton.click(function(){
+        updateDate.setDate(updateDate.getDate() - 7);
+        refresh(new Date(updateDate));        
+    }).appendTo("#menu");
+    
+    /* Lägger till TILL-FRÅN - Datum-sträng OCH lägger till dagarna med datum i DAG-panelen */
+    getDates(new Date(updateDate));
+    
+    /* Knapp för att flippa till NÄSTA vecka */
+    var $nextButton = $("<div class='button'>Next</div>");
+    $nextButton.click(function(){
+        updateDate.setDate(updateDate.getDate() + 7);
+        refresh(new Date(updateDate));        
+    }).appendTo("#menu");
+    
+    /* Knapp för att flippa till AKTUELL vecka */
+    var $todayButton = $("<div class='button'>Idag</div>");
+    $todayButton.click(function(){
+        refresh(new Date());        
+    }).appendTo("#menu");
+    
+    /* Knapp för att göra ny BOKNING */
+    var $newBookingButton = $("<div class='button'>Ny bokning</div>");
+    $newBookingButton.appendTo("#menu")
+    
+    /* lägger till COLUMNER och RADER i kalendern  */
+    getCalDivs();
+    
+    /* funktion för då en tid-ruta klickats */
+    $("#calendar .column .row").click(function(){
+        console.log($("#calendar .column .row").index(this));
+    });
+}
+
+/* funktion som skapar TILL-FRÅN Datum-sträng och dagar med datum i DAG-panelen */
+function getDates(chosenDate){
+    
+    // datum vi ändrar till
+    var date = chosenDate;
+    
+    var tempDate;    
     var weekDate;
-    var daysString = "";
+    
+    // arrayer med veckodagar och månader på svenska
+    var weekDay = ["Söndag", "Måndag", "Tisdag", "Onsdag", "Torsdag", "Fredag", "Lördag"];
+    var month = ["Januari", "Februari", "Mars", "April", "Maj", "Juni", "Juli", "Augusti", "Spetember", "Oktober", "November", "December"];
     
     for( var i = 0; i < 7; i++){
 
         if(i == 0){
+            // ändra datum till senaste måndag
             date.setDate(date.getDate() - date.getDay() + 1);
         }
         
         else{
+            // öka datumet med 1
             date.setDate(date.getDate() + 1);
-            daysString +=" ";
         }
         
+        // skapa nytt datum-objekt med det nya datumet        
         weekDate = new Date(date);
-        daysString += weekDate.getDate();
+        
+        // skapa en div med class button och lägg till den i #dates        
+        tempDate = $("<div>"+ weekDay[weekDate.getDay()]  + " " +  weekDate.getDate() +"</div>");
+        tempDate.addClass("seventhWidth");
+        
         
         if(i == 0){
             var monDate = weekDate;
@@ -40,28 +88,39 @@ function getMenuDateString(choice){
         if(i == 6){
             var sunDate = weekDate;
         }
-    }
-
-    
-    
-    var month = ["Januari", "Februari", "Mars", "April", "Maj", "Juni", "Juli", "Augusti", "Spetember", "Oktober", "November", "December"];
-    
-    var dateString = monDate.getDate() + " " + month[monDate.getMonth()] + " " + monDate.getFullYear() + " - " + sunDate.getDate() + " " + month[sunDate.getMonth()] + " " + sunDate.getFullYear();
-    
-    
-    if(choice == 1){
-        return dateString;
-    }
-    
-
-
-    
-    if(choice == 2){
         
-        return daysString;
+        // lägg till dag-diven i datum-panelen
+        $("#dates").append(tempDate);
     }
     
+    // skapa div med class button innehållande från - till datum och lägg till i #menu
+    var tempDates = $("<div class='toFromDates'>" + monDate.getDate() + " " + month[monDate.getMonth()] + " " + monDate.getFullYear() + " - " + sunDate.getDate() + " " + month[sunDate.getMonth()] + " " + sunDate.getFullYear() + "</div>");
+    
+    $("#menu").append(tempDates);
     
 }
+
+
+/* funktion som skapar COLUMNER och RADER i kalendern  */
+function getCalDivs(){
+    
+    var tempCol;
+    var tempRow;
+    
+    for( var i = 0; i < 7; i++){
+        
+        tempCol = $("<div class='column'></div>");
+        
+        for( var j = 0; j < 10; j++){
+            tempRow = $("<div class='row'></div>");            
+            tempCol.append(tempRow);
+        }
+
+        $("#calendar").append(tempCol);
+    }
+}
+
+
+
 
 
