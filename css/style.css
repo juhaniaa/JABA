@@ -1,26 +1,34 @@
 #app{
-    border:2px solid red;
+    border:2px solid black;
     height:700px;
-    width:1500px;
+    width:95%;
+    margin:auto;    
 }
 
 #menu{
-    border:1px solid green;
     height:50px;
     width:100%;
     margin-top:0px;
+    background-color:#EFF;
 }
 
 #dates{
-    border:1px solid blue;
     height:50px;
     width:100%;
     margin-top:0px;
+    background-color:#FEF;
 }
 
 #kalendar{
-    border:1px solid black;
     height:600px;
     width:100%;
     margin-top:0px;
+    background-color:#FFD;
+}
+
+.button{
+    float:left;
+    border:1px solid black;
+    margin:3px;
+    padding:3px;
 }
