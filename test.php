@@ -6,6 +6,8 @@
     
 
     $test = $_POST['test'];
+
+    var_dump($_POST);
     
     /* insert new row into table test */
     mysql_query("INSERT INTO `aavanenprogramm`.`test` (`testID` ,`test`)

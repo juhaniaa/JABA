@@ -39,7 +39,7 @@ function refresh(updateDate){
     var $newBookingButton = $("<div class='button'>Ny bokning</div>");
     $newBookingButton.click(function(){
         // skapa en div som ligger ovanpå allt
-        var $newBack = $("<div id='newBack'>ny bookning div</div>");
+        var $newBack = $("<div id='newBack'></div>");
         
         
         // fyll diven med formuläret
@@ -52,7 +52,7 @@ function refresh(updateDate){
             var $formPieceDiv = $("<div></div>");
             
             var formLabel = $("<label for='new" + name +"'>" + name + "</label>").appendTo($formPieceDiv);
-            var formInput = $("<input type='text' id='new" + name + "'/>").appendTo($formPieceDiv);            
+            var formInput = $("<input type='text' name='new" + name + "' id='new" + name + "'/>").appendTo($formPieceDiv);            
 
             $formPieceDiv.appendTo($formForm);
         }
@@ -63,10 +63,10 @@ function refresh(updateDate){
         createFormPiece("Description");
         
         
-        var $cancelButton = $("<div>Cancel</dic>").click(function(){
+        var $cancelButton = $("<div>Tillbaka</dic>").click(function(){
             $newBack.remove();
         }).appendTo($newB);
-        var $confirmButton = $("<input type='submit' name='submit'/>").appendTo($formForm);
+        var $confirmButton = $("<input type='submit' value='Spara'/>").appendTo($formForm);
         
         $newB.prependTo($newBack);
         $newBack.prependTo("body");
