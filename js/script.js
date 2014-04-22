@@ -37,7 +37,44 @@ function refresh(updateDate){
     
     /* Knapp för att göra ny BOKNING */
     var $newBookingButton = $("<div class='button'>Ny bokning</div>");
-    $newBookingButton.appendTo("#menu")
+    $newBookingButton.click(function(){
+        // skapa en div som ligger ovanpå allt
+        var $newBack = $("<div id='newBack'>ny bookning div</div>");
+        
+        
+        // fyll diven med formuläret
+        var $newB = $("<div id='newB'></div>");
+        
+        var $formForm = $("<form action='newBooking.php' method='post'></form>");
+        $formForm.appendTo($newB);
+        
+        function createFormPiece(name){
+            var $formPieceDiv = $("<div></div>");
+            
+            var formLabel = $("<label for='new" + name +"'>" + name + "</label>").appendTo($formPieceDiv);
+            var formInput = $("<input type='text' id='new" + name + "'/>").appendTo($formPieceDiv);            
+
+            $formPieceDiv.appendTo($formForm);
+        }
+        
+        createFormPiece("Name");
+        createFormPiece("Date");
+        createFormPiece("Time");
+        createFormPiece("Description");
+        
+        
+        var $cancelButton = $("<div>Cancel</dic>").click(function(){
+            $newBack.remove();
+        }).appendTo($newB);
+        var $confirmButton = $("<input type='submit' name='submit'/>").appendTo($formForm);
+        
+        $newB.prependTo($newBack);
+        $newBack.prependTo("body");
+        
+        
+        
+        
+    }).appendTo("#menu");
     
     /* lägger till COLUMNER och RADER i kalendern  */
     getCalDivs();
