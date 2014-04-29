@@ -6,10 +6,11 @@
     $date = $_POST["newDate"];
     $time = $_POST["newTime"];
     $desc = $_POST["newDescription"];
+    $bookingId = $_POST["bookingId"];
 
     
-    mysql_query("INSERT INTO Bookings(Name, Date, Time, Description)
-                        VALUES('$name', '$date', '$time', '$desc')") or die(mysql_error());
+    $myQuery = "UPDATE `aavanenprogramm`.`Bookings` SET `Name` = '".$name."',`Date` = '".$date."',`Time` = '".$time."',`Description` = '".$desc."' WHERE `Bookings`.`Booking` =".$bookingId;
+    mysql_query($myQuery);
 
     header("Location: ../");
     
