@@ -5,6 +5,12 @@ JABA.Calendar = {
     refresh: function(updateDate){
         $("#menu, #dates, #calendar").empty();
         
+        $("#logOut").click(function(){
+            $.get("php/loginStop.php",{},function(data){                                
+                window.location.replace("login.html");
+            });
+        });
+        
         // ändra datum variablerna för första och sista datumet
         JABA.Calendar.firstDate.setDate(updateDate.getDate() - updateDate.getDay() + 1);
         JABA.Calendar.lastDate.setDate(updateDate.getDate() - updateDate.getDay() + 7);
@@ -160,7 +166,12 @@ JABA.Calendar = {
             
             var $confirmButton = $("<div>Go to date</dic>").click(function(){
                 $newBack.remove();
-                JABA.Calendar.refresh(new Date(datePickInput.val()));
+                if(Date.parse(datePickInput.val())){
+                    JABA.Calendar.refresh(new Date(datePickInput.val()));
+                }
+                else{
+                    alert("invalid date");
+                }
                 
             }).appendTo($newB);
             

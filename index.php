@@ -1,4 +1,12 @@
-<!DOCTYPE html>
+<?PHP 
+    include "php/loginFunc.php";
+    $logged = CheckLogin();
+    if(!$logged){
+        header("Location:../login.html");    
+    } else{
+        
+    }
+?>
 <html lang="en">
 <head>
 
@@ -22,6 +30,7 @@
     
 <body>
     <div id="header">JABA Juhani Aavanens Booking App</div>
+    <div id="logOut">Log Out</div>
     
 	<div id="app">
         

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+	<!-- Basic Page Needs
+  ================================================== -->
+	<meta charset="utf-8">
+	<title>JABA - Login</title>
+	<meta name="description" content="">
+	<meta name="author" content="">
+
+    <script src="js/jquery-2.1.0.js" type="text/javascript" charset="utf-8"></script>
+
+	<!-- CSS
+  ================================================== -->
+	<link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/base.css">
+
+</head>
+    
+<body>
+    <div id="header">JABA Juhani Aavanens Booking App</div>
+    
+	<div id='loginContainer'>
+        
+        <form id='login' action='php/login.php' method='post' accept-charset='UTF-8'>
+            
+            <fieldset>
+            
+                <legend>Login</legend>
+                
+                <label for='user'>User Name:</label>
+                <input type='text' name='user' id='user' maxlength='50'/>
+                
+                <label for='pass'>Password:</label>
+                <input type='password' name='pass' id='pass' maxlength='50'/>
+                
+                <input type='submit' name='Submit' value='Submit'/>                
+        
+            </fieldset>
+            
+        </form>
+        
+    </div>
+	
+</body>
+</html>

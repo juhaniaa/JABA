@@ -1,16 +1,24 @@
 <?php
     header('Content-type: text/html; charset=utf-8');
     include "../config.php";
-
-    $name = $_POST["newName"];   
-    $date = $_POST["newDate"];
-    $time = $_POST["newTime"];
-    $desc = $_POST["newDescription"];
-
+    include "cleanBooking.php";
     
-    mysql_query("INSERT INTO Bookings(Name, Date, Time, Description)
-                        VALUES('$name', '$date', '$time', '$desc')") or die(mysql_error());
+    if(checkSet() != FALSE){
+        
+        
+        if(allClean()){
+            
+            
+            $name = mysql_real_escape_string($_POST["newName"]);   
+            $date = mysql_real_escape_string($_POST["newDate"]);
+            $time = mysql_real_escape_string($_POST["newTime"]);
+            $desc = mysql_real_escape_string($_POST["newDescription"]);
+            
+            $myQuery = "INSERT INTO Bookings(Name, Date, Time, Description) VALUES('$name', '$date', '$time', '$desc')";
+            mysql_query($myQuery);
 
-    header("Location: ../");
-    
+            echo $date;
+            
+        }    
+    }
 ?>
