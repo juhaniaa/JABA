@@ -16,9 +16,13 @@
 
 #app{
     border:2px solid black;
-    height:700px;
+    min-height:700px;
     width:95%;
     margin:auto;    
+}
+
+#messages{
+
 }
 
 #menu{
@@ -104,4 +108,29 @@
 .appointed{
     background-color:#AFF;
 }
+
+
+
+.messageClose{
+    background-color:black;
+    width:10px;
+    height:10px;
+    display:inline-block;
+    margin-top:3px;
+    margin:3px 0 0 3px;
+}
+
+
+
+.okMessage{ 
+    padding:3px;
+    background-color:#5d5;
+}
+
+.badMessage{ 
+    padding:3px;
+    background-color:#F33;
+}
+
+
 

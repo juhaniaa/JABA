@@ -34,6 +34,15 @@ JABA.Booking.BookingForm = function(ifNew, bId, bName, bDate, bTime, bDesc){
             postInfo = "php/changeBooking.php";
         }    
     
+        function flagEmptyFields(){
+            $("input:text").each(function(){
+
+                if($(this).val() == ""){
+                    $(this).addClass("notValid");
+                }
+            });
+            
+        }
         
     
         var $formForm = $("<form action='" + postInfo + "' id='changeForm' method='post'></form>");
@@ -41,7 +50,10 @@ JABA.Booking.BookingForm = function(ifNew, bId, bName, bDate, bTime, bDesc){
         
         $formForm.submit(function(event){            
             
+            flagEmptyFields()
+
             if($("input.notValid").length == 0){
+                
                 var $form = $(this);
                 $.ajax({
                     type: $form.attr('method'),
@@ -49,14 +61,19 @@ JABA.Booking.BookingForm = function(ifNew, bId, bName, bDate, bTime, bDesc){
                     data: $form.serialize()
                 }).done(function(data){
                     if(Date.parse(data)){
+                        
+                        // funktionen körs då servern returnerar ett godkänt datum 
+                        // efter att en bokning registrerates eller ändrats                        
                         JABA.Calendar.refresh(new Date(data));
+                        new JABA.Message("Booking has been saved", "okMessage");
                     }else{
-                        alert("invalid date!");
+                        new JABA.Message("Something went wrong", "badMessage");
                     }
                     $newBack.remove();
                 });
             } else { 
-                alert("invalid form!");
+                // PLEASE ADD messages in form wich inform user of bad input in fields
+                new JABA.Message("Bad form input this will be fixed", "badMessage");
             }                    
             
             event.preventDefault();
@@ -112,6 +129,8 @@ JABA.Booking.BookingForm = function(ifNew, bId, bName, bDate, bTime, bDesc){
             $.post("php/eraseBooking.php",{bookingId:bId},function(data){
                 JABA.Calendar.refresh(new Date(bDate));
             });
+            
+            new JABA.Message("Booking has been erased", "okMessage");
             
         }).appendTo($newB);
         

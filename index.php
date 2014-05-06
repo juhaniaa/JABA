@@ -20,6 +20,7 @@
     <script src="js/jquery-2.1.0.js" type="text/javascript" charset="utf-8"></script>
     <script src="js/script.js" type="text/javascript" charset="utf-8"></script>
     <script src="js/Booking.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/Message.js" type="text/javascript" charset="utf-8"></script>
 
 	<!-- CSS
   ================================================== -->
@@ -33,6 +34,9 @@
     <div id="logOut">Log Out</div>
     
 	<div id="app">
+        
+        <!-- For them messages -->
+        <div id="messages"></div>
         
         <!-- Menu with buttons to navigate dates -->
         <div id="menu"></div>

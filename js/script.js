@@ -63,6 +63,8 @@ JABA.Calendar = {
         });
         
         JABA.Calendar.getAjaxBookings(updateDate);
+        
+      
     },
     
     
@@ -170,7 +172,8 @@ JABA.Calendar = {
                     JABA.Calendar.refresh(new Date(datePickInput.val()));
                 }
                 else{
-                    alert("invalid date");
+                    // fixa så att man ser direkt när fel i input-fältet
+                    new JABA.Message("Invalid date, This will also be fixed", "badMessage");
                 }
                 
             }).appendTo($newB);
