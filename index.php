@@ -31,7 +31,6 @@
     
 <body>
     <div id="header">JABA Juhani Aavanens Booking App</div>
-    <div id="logOut">Log Out</div>
     
 	<div id="app">
         

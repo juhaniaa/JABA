@@ -3,9 +3,9 @@
 
     function allClean(){
         
-        $validChar = array(' ', '-', 'å', 'ä', 'ö');
+        $validChar = array(' ', '-', 'å', 'ä', 'ö', 'Å', 'Ä', 'Ö');
         
-        if(!cleanTest($_POST["newName"], "string", 20) || !ctype_alnum(str_replace($validChar, '', $_POST["newName"])) || isEmpty($_POST["newName"])){
+        if(!cleanTest($_POST["newName"], "string", 20) || !ctype_alnum(str_replace($validChar, 'a', $_POST["newName"])) || isEmpty($_POST["newName"])){
             return false;
         }
         
@@ -28,7 +28,7 @@
         }
         
         
-        if(!cleanTest($_POST["newDescription"], "string", 30) || !ctype_alnum(str_replace($validChar, '', $_POST["newDescription"])) || isEmpty($_POST["newDescription"])){
+       if(!ctype_alnum(str_replace($validChar, 'a', $_POST["newDescription"])) || !cleanTest($_POST["newDescription"], "string", 30) || isEmpty($_POST["newDescription"])){
             return false;
         }
         

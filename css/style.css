@@ -1,3 +1,31 @@
+a{
+    display:block;
+    width:100%;
+    height:100%;
+    text-decoration:none;
+    color:#333;
+}
+
+input{
+    width:200px;
+    display:block;
+    border:1px solid black;
+    margin:3px 0 5px 0;
+    box-shadow:0px 0px 8px rgba(0, 0, 0, 0.2);
+}
+
+#menu a:hover{
+    font-size:20px;
+    transition:all 0.5s ease 0s;
+}
+
+.appointed:hover{
+    transform:scale(1.05,1.05);
+    background-color:#8EE;
+    transition:all 0.3s ease-in;
+}
+
+
 #header{
     width:95%;
     font-size: 46px; 
@@ -5,6 +33,7 @@
     margin-bottom: 14px;
     margin-top: 20px;
     text-align:center;
+    min-width:700px;
 }
 
 #loginContainer{
@@ -16,8 +45,8 @@
 
 #app{
     border:2px solid black;
-    min-height:700px;
     width:95%;
+    min-width:700px;
     margin:auto;    
 }
 
@@ -26,6 +55,7 @@
 }
 
 #menu{
+    border-bottom:2px solid black;
     height:50px;
     width:100%;
     margin-top:0px;
@@ -33,6 +63,7 @@
 }
 
 #dates{
+    border-bottom:2px solid black;
     height:50px;
     width:100%;
     margin-top:0px;
@@ -67,6 +98,23 @@
     z-index:10;
 }
 
+#bookingList{
+    background-color:white;
+    border:3px solid black;
+    margin:100px auto;
+    width:300px;
+    height:650px;
+    padding:15px;
+    top:15%;
+    opacity:1;
+    z-index:10;
+}
+
+.listDiv{
+    margin:5px;
+    height:50px;
+}
+
 .button{
     float:left;
     width:10%;
@@ -83,22 +131,59 @@
     text-align:center;
 }
 
-.column{
-    width:14%;
-    height:100%;
+.column, .row, .timeCol, .timeRow{
+    box-sizing: border-box;
+}
+
+.column, .timeCol{
+    border:0.1px solid black;
+    height:600px;
     float:left;
-    border:1px solid black;
+}
+
+.row, .timeRow{
+    height:60px;
+    width:100%;    
+    border-bottom:0.5px dotted black;
+    border-top:0.5px dotted black;
+        
+    overflow:hidden;
+    
+}
+
+.column{
+    width:13%;
 }
 
 .row{
-    height:9%;
-    width:100%;
-    border-bottom:1px dotted black;
+    line-height:13.5px;
+    font-size:13.5px;
 }
+
+.timeCol{
+    width:9%;
+    background-color:#AAF;
+
+}
+
+.timeRow{
+    font-size:20px;
+    line-height:60px;
+    text-align:center;
+}
+
+.timeDate{
+    float:left;
+    width:9%;
+    height:50px;
+    line-height:50px;
+    text-align:center;
+}
+
 
 .seventhWidth{
     float:left;
-    width:14%;
+    width:13%;
     height:50px;
     line-height:50px;
     text-align:center;
@@ -107,6 +192,9 @@
 
 .appointed{
     background-color:#AFF;
+    border-radius:10px;
+    border:none;
+    padding:3px;    
 }
 
 
@@ -130,6 +218,14 @@
 .badMessage{ 
     padding:3px;
     background-color:#F33;
+}
+
+.todayMarking{
+    background-color:#DAD;
+}
+
+.invLabel{
+    color:red;
 }
 
 
