@@ -4,7 +4,7 @@
     
     $fDate = $_GET["fDate"];
 
-    $myQuery = "SELECT * FROM `aavanenprogramm`.`Bookings` where `Date` > '".$fDate."' ORDER BY `Date`, `Time` LIMIT 10";
+    $myQuery = "SELECT * FROM `aavanenprogramm`.`Bookings` where `Date` >= '".$fDate."' ORDER BY `Date`, `Time` LIMIT 7";
     $result = mysql_query($myQuery);
 
     $data = array();

@@ -1,53 +1,62 @@
-a{
-    display:block;
-    width:100%;
-    height:100%;
+a{    
     text-decoration:none;
     color:#333;
 }
 
-input{
+html{
+    min-height:100%;
+    position:relative;
+}
+
+body{
+    height:100%;
+}
+
+h2{
+    font-size: 30px; 
+    line-height: 35px; 
+    margin-bottom: 5px;
+}
+
+input, select{
     width:200px;
     display:block;
     border:1px solid black;
     margin:3px 0 5px 0;
-    box-shadow:0px 0px 8px rgba(0, 0, 0, 0.2);
+    box-shadow:0px 0px 8px rgba(0, 0, 0, 0.4);
 }
 
-#menu a:hover{
-    font-size:20px;
-    transition:all 0.5s ease 0s;
+input#bookingId{
+    background-color:rgba(222, 222, 222, 0.78);    
 }
 
-.appointed:hover{
-    transform:scale(1.05,1.05);
-    background-color:#8EE;
-    transition:all 0.3s ease-in;
+input#bookingId:hover{
+    cursor:default;
 }
-
 
 #header{
     width:95%;
-    font-size: 46px; 
-    line-height: 50px; 
-    margin-bottom: 14px;
-    margin-top: 20px;
+    font-size: 35px; 
+    line-height: 35px; 
+    margin-bottom:0px;
+    margin-top: 15px;
     text-align:center;
     min-width:700px;
 }
 
 #loginContainer{
     border:2px solid black;
+    border-radius:5px;
     width:200px;
     margin:100px auto 0 auto;
     padding:14px;
 }
 
 #app{
-    border:2px solid black;
     width:95%;
-    min-width:700px;
-    margin:auto;    
+    min-width:710px;
+    max-width:1100px;
+    margin:10px auto 20px auto;
 }
 
 #messages{
@@ -55,39 +64,70 @@ input{
 }
 
 #menu{
-    border-bottom:2px solid black;
+    border:2px solid black;
     height:50px;
     width:100%;
     margin-top:0px;
-    background-color:#EFF;
+    background-color:rgb(229, 214, 173);
 }
 
 #dates{
     border-bottom:2px solid black;
+    border-left:2px solid black;
+    border-right:2px solid black;
     height:50px;
     width:100%;
     margin-top:0px;
-    background-color:#FEF;
+    background-color:rgba(229, 214, 173, 0.57);
+}
+
+.todayMarking{
+    
+    background-color:#f2c373;
 }
 
 #calendar{
     height:600px;
     width:100%;
     margin-top:0px;
-    background-color:#FFD;
+    background-color:#fff7e8;
+    border:2px solid black;
+    border-top:none;
 }
 
-#newBack{
+#newBack, #overlay{
+    width:100%;
+    height:100%;
+    min-height:1300px;
+    top:0;    
+    position:absolute;
+    background-color:rgba(0, 0, 0, 0.3);
+    z-index:1;
+}
+
+#newB, #modal{
+    background-color:#FFEBBF;
+    border:3px solid black;
+    border-radius:5px;
+    left:40%;
+    padding:15px;
+    position:absolute;
+    top:130px;
+    opacity:1;
+    z-index:10;
+}
+
+#confirmBack{
     bottom:0;
     left:0;
     right:0;
     top:0;
     position:fixed;
     background-color:rgba(0, 0, 0, 0.3);
-    z-index:1;
+    z-index:11;
 }
 
-#newB{
+#confirmDiv{
     background-color:white;
     border:3px solid black;
     left:40%;
@@ -95,19 +135,41 @@ input{
     position:fixed;
     top:40%;
     opacity:1;
-    z-index:10;
+    z-index:20;
 }
 
 #bookingList{
-    background-color:white;
+    background-color:#FFEBBF;
     border:3px solid black;
-    margin:100px auto;
+    border-radius:5px;
+    margin:130px auto;
     width:300px;
-    height:650px;
     padding:15px;
-    top:15%;
     opacity:1;
     z-index:10;
+}
+
+#bookingList p{
+    background-color:white;
+    width:160px;
+    border-radius:5px;
+    text-align:center;
+    margin: 20px 0 -5px 0;
+    box-shadow:0px 0px 8px rgba(0, 0, 0, 0.4);
+}
+
+#bookingList .appointed a{
+    margin:15px 0 0 0;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+#bookingList .appointed a:hover{
+    background-color:#ffd48b;
+}
+
+#bookingList a.btnClose{
+    float:none;
+    margin:10px 0 0 0;
 }
 
 .listDiv{
@@ -115,61 +177,240 @@ input{
     height:50px;
 }
 
-.button{
+#menu div:not(.monthDates):not(.toFromDates) a, a.btnNew{    
+    width:55px;
+    height:30px;
+    display:block;
+    transition: background-image 0.4s ease-in-out;
+}
+
+#menu div:not(.monthDates):not(.toFromDates) a{
+    margin:10px auto;
+}
+
+#menu div:not(.monthDates):not(.toFromDates){
     float:left;
-    width:10%;
+    width:13%;
     height:50px;
     line-height:50px;
     text-align:center;
+}
+
+#menu div:not(.monthDates):nth-of-type(1){
+    width:9%;
+}
+
+
+
+#menu div a.setting, a.btnSetting{
+    background-image:url(../images/BtnSetting.png);
+}
+
+#menu div a.setting:hover, a.btnSetting:hover{
+    background-image:url(../images/BtnSettingH.png);
+}
+
+#menu div a.new, a.btnNew{
+    background-image:url(../images/BtnAdd.png);
+}
+
+#menu div a.new:hover, a.btnNew:hover{
+    background-image:url(../images/BtnAddH.png);
+}
+
+#menu div a.today{
+    background-image:url(../images/BtnHouse.png);
+}
+
+#menu div a.today:hover{
+    background-image:url(../images/BtnHouseH.png);
+}
+
+#menu div a.prev{
+    background-image:url(../images/BtnPrev.png);
+}
+
+#menu div a.prev:hover{
+    background-image:url(../images/BtnPrevH.png);
+}
+
+#menu div a.next{
+    background-image:url(../images/BtnNext.png);
+}
+
+#menu div a.next:hover{
+    background-image:url(../images/BtnNextH.png);
+}
+
+#menu div a.list{
+    background-image:url(../images/BtnList.png);
+}
+
+#menu div a.list:hover{
+    background-image:url(../images/BtnListH.png);
+}
+
+a.btnSave, a.btnErase, a.btnClose, a.btnLogIn, a.btnLogOut, a.btnGoto, a.btnWeek, a.btnMonth{
+    width:55px;
+    height:30px;
+    display:block;
+    float:left;
+    margin:5px;
+    transition: background-image 0.2s ease-in-out;
+}
+
+a.btnSave{
+    background-image:url(../images/BtnSave.png);
+}
+
+a.btnSave:hover{
+    background-image:url(../images/BtnSaveH.png);
+}
+
+a.btnErase{
+    background-image:url(../images/BtnErase.png);
+}
+
+a.btnErase:hover{
+    background-image:url(../images/BtnEraseH.png);
+}
+
+a.btnClose{
+    background-image:url(../images/BtnClose.png);
+}
+
+a.btnClose:hover{
+    background-image:url(../images/BtnCloseH.png);
+}
+
+a.btnLogIn{
+    background-image:url(../images/BtnLogIn.png);
+}
+
+a.btnLogIn:hover{
+    background-image:url(../images/BtnLogInH.png);
+}
+
+a.btnLogOut{
+    background-image:url(../images/BtnLogOut.png);
+}
+
+a.btnLogOut:hover{
+    background-image:url(../images/BtnLogOutH.png);
+}
+
+a.btnGoto{
+    background-image:url(../images/BtnGoto.png);
+}
+
+a.btnGoto:hover{
+    background-image:url(../images/BtnGotoH.png);
+}
+
+a.btnWeek{
+    background-image:url(../images/BtnWeek.png);
+}
+
+a.btnWeek:hover{
+    background-image:url(../images/BtnWeekH.png);
+}
+
+a.btnMonth{
+    background-image:url(../images/BtnMonth.png);
+}
+
+a.btnMonth:hover{
+    background-image:url(../images/BtnMonthH.png);
+}
+
+.toFromDates, .monthDates{
+    float:left;
+    width:26%;
+    height:50px;
+    text-align:center;
+    
 }
 
 .toFromDates{
-    float:left;
-    width:40%;
-    height:50px;
-    line-height:50px;
-    text-align:center;
+    line-height:18px;
 }
 
-.column, .row, .timeCol, .timeRow{
+.monthDates{
+    line-height:40px;
+    font-size:20px;
+}
+
+.toFromDates a, .monthDates a{
+    display:block;    
+    margin:5px auto;
+    background-color:rgba(135, 105, 75, 0.21);
+    border-radius:5px;
+    width:calc(100% - 12px);
+    height:calc(100% - 10px);
+    transition:all 0.3s ease;
+}
+
+.toFromDates a:hover, .monthDates a:hover{
+    
+    background-color:rgba(135, 105, 75, 0.38);
+}
+
+.column, .row, .timeCol, .timeRow, .monthColumn{
     box-sizing: border-box;
 }
 
-.column, .timeCol{
-    border:0.1px solid black;
+.column, .timeCol, .monthColumn{
     height:600px;
     float:left;
+}
+
+.timeRow:last-of-type{
+    border-bottom:1px solid white;
+}
+
+.timeCol{
+    border-bottom:1px solid black;
 }
 
 .row, .timeRow{
     height:60px;
     width:100%;    
-    border-bottom:0.5px dotted black;
-    border-top:0.5px dotted black;
-        
-    overflow:hidden;
-    
+
+    overflow:hidden;    
 }
 
 .column{
     width:13%;
 }
 
+
+.lastRow{
+    
+}
+
+.monthColumn{
+    width:14.28%;
+}
+
 .row{
-    line-height:13.5px;
-    font-size:13.5px;
+    line-height:13px;
+    font-size:13px;
+    border:1px solid white;
 }
 
 .timeCol{
     width:9%;
-    background-color:#AAF;
+    background-color:rgba(229, 214, 173, 0.57);
+    border-right:1px solid black;
 
 }
 
 .timeRow{
-    font-size:20px;
+    font-size:15px;
     line-height:60px;
     text-align:center;
+    border:1px dotted white;
+
 }
 
 .timeDate{
@@ -186,15 +427,34 @@ input{
     width:13%;
     height:50px;
     line-height:50px;
-    text-align:center;
-    
+    text-align:center;    
 }
 
-.appointed{
-    background-color:#AFF;
-    border-radius:10px;
-    border:none;
-    padding:3px;    
+.monthWidth{
+    float:left;
+    width:13%;
+    height:50px;
+    line-height:50px;
+    text-align:center;    
+}
+
+.monthDay{
+    float:left;
+    width:13%;
+    height:60px;
+    box-sizing:border-box;
+    border:1px solid #FFF;
+}
+
+.appointed a{
+    width:calc(100% - 6px);
+    height:54px;
+    display:block;
+    background-color:#ffdb9e;
+    margin:3px;
+    border-radius:5px;
+    padding-left:1px;
+    overflow:hidden;
 }
 
 
@@ -208,24 +468,137 @@ input{
     margin:3px 0 0 3px;
 }
 
+#messages p{
+    height:20px;
+    padding:5px 0 0 5px;
+}
 
 
 .okMessage{ 
-    padding:3px;
-    background-color:#5d5;
+    background-color:rgba(85, 221, 85, 0.58);
+    border-radius:5px;
 }
 
 .badMessage{ 
-    padding:3px;
     background-color:#F33;
 }
 
-.todayMarking{
-    background-color:#DAD;
-}
+
 
 .invLabel{
     color:red;
+}
+
+.isDayOfMonth{
+    background-color:#ffeece;
+}
+
+.isDayOfMonth:hover{
+    background-color:#ffe7bb;
+}
+
+.isBookedDay{
+    background-color:#ffdb9e;
+}
+
+.isBookedDay:hover{
+    background-color:#ffd48b;
+}
+
+
+
+.todayCol{
+    border-right:1px solid #9a722f;
+    border-left:1px solid #9a722f;
+}
+
+.monthDay{
+    text-align:center;
+    border-radius:5px;
+}
+
+.isDayOfMonth a{       
+    width:100%;
+    height:40px;
+    display:block;    
+    margin:auto;
+    padding-top:20px;
+}
+
+.isBookedDay.isActiveDay{
+    background-color:#f2c373;
+}
+
+.isActiveDay:not(.isBookedDay){      
+    background-color:#f2c373;
+}
+
+.isTodayDay{
+    border:2px solid #9a722f;  
+    font-size:25px;    
+    line-height:15px;
+    font-weight:bold;    
+}
+
+.row:not(.appointed):hover{
+    background-color:#ffeccc;
+}
+
+#lastOne{
+    clear:both;
+    display:block;    
+    padding:10px;
+    background-color:#ffeece;
+    border-radius:15px;
+    margin-top:5px;
+    margin-bottom:200px;
+    overflow:hidden;
+}
+
+#lastOne a.btnNew{
+    margin:30px 0 0 50px;
+}
+
+#lastOne li{
+    margin:10px 5px;
+    display:block;
+    float:left;
+    width:180px;
+    height:70px;
+}
+
+#lastOne li a.isBookedDay{
+    width:180px;
+    height:50px;
+    display:block;
+    overflow:hidden;
+    padding-left:3px;
+    padding-top:3px;
+    border-radius:5px;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+#lastOne h2{
+    margin:5px 0 10px 10px;
+}
+
+#lastOne h3{
+    margin:5px 0 0 10px;
+}
+
+#lastOne p{
+    margin:0 0 5px 0;    
+    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.4);
+    background-color: #FFF;
+    border-radius: 5px;
+    width: 40px;
+    text-align: center;
+    padding: 1px;
+}
+
+#whiteSpace{
+    clear:both;
+    height:5px;
 }
 
 

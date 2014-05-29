@@ -1,19 +1,11 @@
-<?PHP 
-    include "php/loginFunc.php";
-    $logged = CheckLogin();
-    if(!$logged){
-        header("Location:../login.html");    
-    } else{
-        
-    }
-?>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 
 	<!-- Basic Page Needs
   ================================================== -->
 	<meta charset="utf-8">
-	<title>JABA - Home</title>
+	<title>JABA - Qunit Tests</title>
 	<meta name="description" content="">
 	<meta name="author" content="">
 
@@ -26,28 +18,19 @@
 	<!-- CSS
   ================================================== -->
     <link rel="stylesheet" href="css/base.css">
-	<link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="test/qunit.css">
     
 
 </head>
     
 <body>
-    <div id="header">JABA Juhani Aavanens Booking App</div>
     
-	<div id="app">
-        
-        <!-- For them messages -->
-        <div id="messages"><p></p></div>
-        
-        <!-- Menu with buttons to navigate dates -->
-        <div id="menu"></div>
-        
-        <!-- Bar for presenting dates -->
-        <div id="dates"></div>
-        
-        <!-- table for presenting data -->
-		<div id="calendar"></div>
-
-	</div>
+    
+    
+	<div id='qunit'></div>
+    <div id='qunit-fixture'></div>
+    <script src="test/qunit.js"></script>
+    <script src="test/tests.js"></script>
+	
 </body>
 </html>
