@@ -10,4 +10,4 @@ För att testköra applikationen:
     
 Referat till Software Craftmanship föreläsningen som jag missade vid ursprungstillfället finns i katalogen docs
 
-2014 ja222qm Juhani Aavanen
+ja222qm Juhani Aavanen 2014
