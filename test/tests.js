@@ -34,6 +34,13 @@ test("Veckodagar", function(){
     
 });
 
+test("Mode ändring", function(){
+    JABA.Calendar.setMode("Week");
+    ok(JABA.Calendar.mode === "Week", "Ändring till vecka");
+    JABA.Calendar.setMode("Month");
+    ok(JABA.Calendar.mode === "Month", "Ändring till månad");
+});
+
 test("hello test", function(){
     ok(1 == "1", "Passed!");
 });

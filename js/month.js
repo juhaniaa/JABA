@@ -4,7 +4,7 @@ var JABA = JABA || {};
 JABA.Month = {
     refreshMonth: function(updateDate){
         $("#menu, #dates, #calendar").empty();
-        JABA.Month.myArrays = [];    
+        JABA.Month.myArrays = [];                
                         
         /* Knappa för att visa lista på kommande bokningar */
         var $listButton = $("<div class='button'></div>").appendTo("#menu");
@@ -53,6 +53,7 @@ JABA.Month = {
             event.preventDefault();
             JABA.Calendar.settingsForm(updateDate);
         }).appendTo($settingsButton);
+        
         
         JABA.Month.getAjaxBookings(updateDate);
         
@@ -395,6 +396,7 @@ JABA.Month = {
     
     settingsForm: function(updateDate){
         
+        alert("Im never used, I think");
         // skapa en div som ligger ovanpå allt
         var $newBack = $("<div id='newBack'></div>").prependTo("body");;
                 
