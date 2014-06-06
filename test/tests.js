@@ -1,4 +1,4 @@
-test("Veckodagar", function(){
+test("AT 1.1 Veckodagar", function(){
     var indata = new Date(2014, 04, 29);
     
     JABA.Calendar.getWeekDates(indata)
@@ -30,11 +30,10 @@ test("Veckodagar", function(){
     ok(JABA.Calendar.daysOfWeek[6].year === "2014" == true, "Söndag rätt år");
     ok(JABA.Calendar.daysOfWeek[6].month === "06" == true, "Söndag rätt månad");
     ok(JABA.Calendar.daysOfWeek[6].day === "01" == true, "Söndag rätt dag");
-    
-    
+        
 });
 
-test("Mode ändring", function(){
+test("AT 1.2 Mode", function(){
     JABA.Calendar.setMode("Week");
     ok(JABA.Calendar.mode === "Week", "Ändring till vecka");
     JABA.Calendar.setMode("Month");

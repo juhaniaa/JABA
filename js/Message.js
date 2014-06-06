@@ -3,10 +3,6 @@ var JABA = JABA || {};
 
 JABA.Message = function(messageText, messageType){
     
-    /*var messageDiv = $("#messages");
-    messageDiv.empty();*/
-    
-    console.log(messageText);
     var messageP = $("#messages p").addClass(messageType).text(messageText).fadeIn(400);
     //var messageP = $("<p class='"+messageType+"'>"+ messageText+"</p>").fadeIn(400).appendTo(messageDiv);
     

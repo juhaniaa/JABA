@@ -1,28 +1,36 @@
 "use strict";
 var JABA = JABA || {};
 
-
 JABA.Calendar = {
+    // uppdaterar kalendern till valt datum utifrån satt inställning antingen vecka eller månad
     refresh: function(updateDate){
         
-        console.log(updateDate);
-        $("#menu, #dates, #calendar").empty();
-                            
+        $("#menu, #dates, #calendar").empty();        
+        
+        JABA.Calendar.monthBookingsArr = [];                             
+        
         /* Hämtar veckans datum */
-        JABA.Calendar.getWeekDates(updateDate);
+        JABA.Calendar.getWeekDates(updateDate);        
         
-        /* Hämtar månads datum 
-        JABA.Calendar.getMonthDates(updateDate);*/
-                                
         /* Lägger till menyn */
-        JABA.Calendar.addMenu(updateDate);        
+        JABA.Calendar.addMenu(updateDate);                                    
         
-        /* Lägger till COLUMNER och RADER i kalendern  */
-        JABA.Calendar.getCalDivs();
-        
-        /* Lägger till bokningarna i kalendern */
-        JABA.Calendar.getAjaxBookings(updateDate);
-
+        if(JABA.Calendar.mode == "Month"){
+                            
+            /* Hämtar bokningarna och lägger till i monthBookingsArr */
+            JABA.Calendar.getMonthBookings(updateDate);
+            
+            /* lägger till COLUMNER och RADER med bokningarna ur monthBookingsArr i kalendern  */
+            JABA.Calendar.getMonthDivs(updateDate); 
+                        
+        } else{                                                                                        
+                        
+            /* Lägger till COLUMNER och RADER i kalendern  */
+            JABA.Calendar.getWeekDivs();
+            
+            /* Lägger till bokningarna ur daysOfWeek arrayen i kalendern */
+            JABA.Calendar.getWeekBookings(updateDate);            
+        }
     },
     
     // tilldelar veckans datum utifrån givet datum
@@ -63,6 +71,7 @@ JABA.Calendar = {
         }                
     },
     
+    // UNDER KONSTRUKTION används ej
     getMonthDates: function(chosenDate){
         for(var k = 0; k < 32; k++){
             
@@ -71,8 +80,258 @@ JABA.Calendar = {
             });            
         }  
     },
+              
+    // lägger till menyn
+    addMenu: function(updateDate){
+        
+        var nextDate;
+        var prevDate;
+        
+        // olika updateringsdatum beroende på läge
+        if(JABA.Calendar.mode == "Month"){
+            prevDate = new Date(updateDate.getFullYear(), (updateDate.getMonth() - 1));   
+            nextDate = new Date(updateDate.getFullYear(), updateDate.getMonth() + 1);
+        } else if(JABA.Calendar.mode == "Week") {
+            prevDate = new Date(updateDate.getFullYear(), updateDate.getMonth(), (updateDate.getDate() - 7));
+            nextDate = new Date(updateDate.getFullYear(), updateDate.getMonth(), updateDate.getDate() + 7);
+        }        
+        
+        // Lista med bokningar
+        JABA.Calendar.addClickBtn("#menu", "list", JABA.Booking.BookingList, "");    
+        
+        // Ny bokning
+        JABA.Calendar.addClickBtn("#menu", "new", JABA.Booking.BookingForm, false);    
+            
+        // Tdigare vecka/månad
+        JABA.Calendar.addClickBtn("#menu", "prev", JABA.Calendar.refresh, prevDate);
+        
+        // Lägger till datumknappen
+        JABA.Calendar.addMenuDates(updateDate);                
+        
+        // Näst vecka/månad        
+        JABA.Calendar.addClickBtn("#menu", "next", JABA.Calendar.refresh, nextDate); 
+            
+        // Till dagens datum
+        JABA.Calendar.addClickBtn("#menu", "today", JABA.Calendar.refresh, new Date());
+                
+        // Inställningar
+        JABA.Calendar.addClickBtn("#menu", "btnSetting", JABA.Calendar.settingsForm, updateDate);
+    },    
     
-    // lägger till veckans dagar och datum i rubrik-menyn
+    // MONTH lägger till knappen med datum
+    addMonthMenuDates: function(chosenDate){
+        
+        // datum vi ändrar till
+        //var date = chosenDate;
+        var menuClass;
+        var datesStr;
+            
+        // arrayer med veckodagar och månader på engelska
+        var weekDay = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+        var month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        
+        $("<div class='timeDate'>Week</div>").appendTo($("#dates"));
+        
+        // 7 columner med veckodagar
+        for(var i = 0; i < 7; i ++){
+            var $text = $("<div>"+weekDay[i]+"</div>").addClass("monthWidth").appendTo($("#dates"));
+        }
+        
+        menuClass = "monthDates";        
+        datesStr = month[chosenDate.getMonth()]+ " "+ chosenDate.getFullYear();
+        
+        // skapa div med class button innehållande från - till datum och lägg till i #menu
+        var menuDates = $("<div></div>").addClass(menuClass).appendTo("#menu");
+
+        $("<a href='#'>"+ datesStr +"</a>").click(function(event){
+            event.preventDefault();            
+            JABA.Calendar.goToDate(chosenDate);                        
+        }).appendTo(menuDates);  
+ 
+    },
+    
+    // MONTH hämtar ut bokningarna för aktuell månad från databasen
+    getMonthBookings: function(chosenDate){
+        
+        var theDate = new Date(chosenDate);
+        
+        var firstDay = new Date(theDate.getFullYear(), theDate.getMonth(), 1).getDay();
+        var lastDay = new Date(theDate.getFullYear(), theDate.getMonth() + 1, 0).getDate();
+            
+        var stringFDate = theDate.getFullYear() + "/" + (theDate.getMonth() + 1) + "/1";
+     
+        var stringLDate = theDate.getFullYear() + "/" + (theDate.getMonth() + 1) + "/" + lastDay;                
+        
+        for(var k = 0; k < 32; k++){
+            
+            JABA.Calendar.monthBookingsArr.push({
+                bookings: []
+            });            
+        }        
+        
+        $.get("php/getBookings.php",{fDate:stringFDate, lDate:stringLDate},function(data){                       
+                        
+            // för varje bokning inom datum-ramarna 
+            $.each(data, function(i, n){        
+                
+                // datumet för bokningen                
+                var getDate = new Date(n[2]).getDate();                
+                
+                var pushedArray = [n[0], n[1], n[2], n[3], n[4]];
+
+                // har nu array med objekt där varje objekt innehåller
+                // en array bookings som innehåller alla den dagens bokningar
+                JABA.Calendar.monthBookingsArr[getDate].bookings.push(pushedArray);                
+            });
+            
+        }, 'json').done(function(){
+            
+            JABA.Calendar.setMonthColors(chosenDate);
+        });
+    },
+    
+    // MONTH funktion som skapar COLUMNER och RADER i kalendern
+    getMonthDivs: function(chosenDate){
+        
+        var theDate = new Date(chosenDate);
+        
+        var firstDay = new Date(theDate.getFullYear(), theDate.getMonth(), 1).getDay();
+        var lastDay = new Date(theDate.getFullYear(), theDate.getMonth() + 1, 0).getDate();
+        var month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];                         
+        
+        // om söndag
+        if(firstDay == 0){
+            firstDay = 7;
+        }
+        
+        JABA.Calendar.firstDay = firstDay;
+        JABA.Calendar.lastDay = lastDay;
+        
+        var number;
+        var iterations = 37;
+        var cols = 5;
+        
+        
+        // om en månad ingår i 6 olika veckor
+        if(firstDay + lastDay -1 > 35){
+            iterations = iterations + 7;
+            cols = 6;            
+        }
+        
+        // om en månad endast ingår i 4 veckor
+        if(firstDay + lastDay -1 < 29){
+            iterations = iterations -7;
+            cols = 4;            
+        }
+        
+        var colHeight = cols * 60;   
+        
+        JABA.Calendar.iterations = iterations;                                
+        
+        
+        $("#calendar").height(colHeight);
+        
+        var tempTimeCol = $("<div class='timeCol'></div>").height(colHeight).appendTo($("#calendar"));        
+        
+        var firstJan = new Date(theDate.getFullYear(),0,1);
+                
+        var firsDayOfMonth = new Date(theDate.getFullYear(), theDate.getMonth(), 1);
+        
+        var daysDiff = (firsDayOfMonth.getTime() - firstJan.getTime())/86400000;        
+        
+        var firstWeek = Math.ceil((daysDiff - firstDay +10)/7);
+        
+        for( var j = 0; j < cols; j++){
+            $("<div class='timeRow'>v."+ (firstWeek + j) +"</div>").appendTo(tempTimeCol);     
+        }
+        
+        // skapa en mängd divs som floatar
+        for(var j = 2; j < iterations; j++){
+            
+            number = j - firstDay;
+            
+            if(number < 1 || number > lastDay){
+                number = "";
+              
+            } 
+            
+            var $monthDiv = $("<div class='monthDay' ></div>").appendTo("#calendar");
+            $("<a href='#' data-number='"+number+"'>" + number + "</a>").click(function(event){
+                event.preventDefault();
+                $(".isActiveDay").removeClass("isActiveDay");
+                $(this).parent().addClass("isActiveDay");
+                
+                if($.isNumeric($(this).data('number'))){
+                    
+                    $("#lastOne").remove();
+                    $("#whiteSpace").remove();
+                    var $whiteSpace = $("<div id='whiteSpace'></div>").appendTo("#calendar");
+                    var $ulList = $("<ul id='lastOne'><h2>Bookings "+$(this).data('number')+ " " + month[theDate.getMonth()] +"</h2></ul>").appendTo("#calendar");
+                    
+                    
+                    if(JABA.Calendar.monthBookingsArr[$(this).data('number')].bookings.length == 0){
+                        $("<h3>No bookings yet</h3>").appendTo($ulList);
+                    }
+                    
+                    var $that = $(this);
+                    
+                    // varje gång den körs innehåller $(this) en array som representerar en bokning
+                    $.each(JABA.Calendar.monthBookingsArr[$(this).data('number')].bookings, function(index, value){
+                        
+                        var $myList = $("<li><p>"+$(this)[3]+":00</p></li>").appendTo($ulList);
+                        
+                        var bNr = $(this)[0];
+                        var bName = $(this)[1];
+                        var bDate = $(this)[2];
+                        var bTime = $(this)[3];
+                        var bDesc = $(this)[4];
+                        
+                        
+                        $("<a href='#'>Name: "+$(this)[1]+"</br>Desc: "+$(this)[4] +"</a>").addClass('isBookedDay').click(function(event){
+                            event.preventDefault();
+                            JABA.Booking.BookingForm(true, bNr, bName, bDate, bTime, bDesc, true, $that.data("number"));
+                        }).appendTo($myList);
+                        
+                       
+                        /*
+                        0 innehåller bokningsnummer
+                        1 namn
+                        2 datum
+                        3 tid
+                        4 desc
+                        */
+                    });
+                    
+                    var $newLi = $("<li></li>").appendTo($ulList);
+                    number = $(this).data('number');
+                    if(number < 10){
+                        number = "0" + number;
+                    }
+                    var monthDate = chosenDate.getMonth() + 1;
+                    if(monthDate < 10){
+                        monthDate = "0" + monthDate;
+                    }
+                    $("<a href='#' data-date='"+number+"'></a>").addClass("btnNew").click(function(event){
+                        event.preventDefault();
+                        var dateString = chosenDate.getFullYear() + "-" + monthDate + "-" + $(this).data("date");
+                        JABA.Booking.BookingForm(false,"","",dateString,"","", true, $(this).data("date"));
+                    }).appendTo($newLi);
+                }
+            }).appendTo($monthDiv);
+            
+            if($.isNumeric(number)){
+                
+                
+                if(JABA.Calendar.monthBookingsArr[number].bookings.length > 0){
+                    $monthDiv.addClass('isBookedDay');
+                } else{                
+                    $monthDiv.addClass('isDayOfMonth');
+                }                
+            }                                    
+        }                
+    },
+    
+    // WEEK lägger till veckans dagar och datum i rubrik-menyn
     addHeaderDates: function(){
         
         $("<div>Time</div>").addClass("timeDate").appendTo($("#dates"));        
@@ -96,14 +355,15 @@ JABA.Calendar = {
         }
     },
     
-    // lägger till ruta med aktuella datum
+     // WEEK lägger till ruta med aktuella datum
     addMenuDates: function(updateDate){
         
         var month = ["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
         var menuClass;
         var datesStr;
-        JABA.Calendar.mode = "Week";
+        
+        
         if(JABA.Calendar.mode == "Week"){
             
             var fDay = JABA.Calendar.daysOfWeek[0].day;        
@@ -118,8 +378,22 @@ JABA.Calendar = {
             menuClass = "toFromDates";
             datesStr = fDay + " " + fMonth + " " + fYear + " -</br>" + tDay + " " + tMonth + " " + tYear;
             
+            JABA.Calendar.addHeaderDates();
+            
         } else if(JABA.Calendar.mode == "Month"){
+            
+            // arrayer med veckodagar och månader på engelska
+            var weekDay = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];            
+            
+            $("<div class='timeDate'>Week</div>").appendTo($("#dates"));
+            
+            // 7 columner med veckodagar
+            for(var i = 0; i < 7; i ++){
+                var $text = $("<div>"+weekDay[i]+"</div>").addClass("monthWidth").appendTo($("#dates"));
+            }
+            
             menuClass = "monthDates";
+            datesStr = month[updateDate.getMonth() + 1] + " " + updateDate.getFullYear();
         }
         
         var menuDates = $("<div></div>").addClass(menuClass).appendTo("#menu");
@@ -130,134 +404,8 @@ JABA.Calendar = {
         }).appendTo(menuDates);
     },
     
-    // tar användaren till valfritt datum
-    goToDate: function(updateDate){
-        
-        var $overlay = $("<div id='overlay'></div>").prependTo("body");
-        
-        var $modal = $("<div id='modal'></div>").prependTo($overlay);
-        
-        $("<h2>Choose Date</h2>").appendTo($modal);
-        
-        var $form = $("<form action='' method='post'></form>").appendTo($modal);
-        
-        var $datePickLabel = $("<label for='datePick'>Date:</label>").appendTo($form);
-        var $datePickInput = $("<input type='text' name='datePick' id='datePick' placeholder='yyyy-mm-dd' maxlength='10'/>").appendTo($form);
-        
-        var bPattern = /^(19|2[0-9])[0-9][0-9]-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/;
-        
-        $datePickInput.change(function(){
-
-            if($datePickInput.val().match(bPattern)){
-                
-                // ändra så att det går att skicka
-                $datePickInput.removeClass("notValid");
-                $datePickLabel.text("Date: ");
-                $datePickLabel.removeClass("invLabel");
-            } else {
-                
-                // ändra så att det inte går att skicka                    
-                $datePickInput.addClass("notValid");
-                $datePickLabel.text("Date: use 'yyyy-mm-dd' format");
-                $datePickLabel.addClass("invLabel");
-            }
-        });
-        
-        var tempMode = "";
-            
-            $form.submit(function(event){
-                
-                event.preventDefault();
-                
-                var toDate = $datePickInput.val();
-                
-                if($("input.notValid").length == 0){
-                    if(toDate == ""){
-                        toDate = updateDate;
-                    }                                        
-                    
-                    if(tempMode == "Week"){
-                        JABA.Calendar.refresh(new Date(toDate));
-                        
-                    } else if(tempMode == "Month"){
-                        JABA.Month.refreshMonth(new Date(toDate));
-                    }
-                    $overlay.remove();   
-                }                
-            });
-                                    
-            JABA.Calendar.addBtn($modal, "btnWeek").click(function(event){
-                event.preventDefault();
-                JABA.Calendar.mode = "Week";
-                tempMode = "Week";
-                $form.submit();
-            });
-        
-            JABA.Calendar.addBtn($modal, "btnMonth").click(function(event){
-                event.preventDefault();
-                JABA.Calendar.mode = "Month";
-                tempMode = "Month";
-                $form.submit();
-            });
-                    
-            JABA.Calendar.addBtn($modal, "btnClose").click(function(event){
-                event.preventDefault();
-                $overlay.remove();
-            });
-    },        
-    
-    setMode: function(choice){
-        JABA.Calendar.mode = choice;
-    },
-    
-    // lägger till menyn
-    addMenu: function(updateDate){
-                     
-        // Lista med bokningar
-        JABA.Calendar.addClickBtn("#menu", "list", JABA.Booking.BookingList, "");                
-        
-        // Ny bokning
-        JABA.Calendar.addClickBtn("#menu", "new", JABA.Booking.BookingForm, false);                
-        
-        // Tidigare vecka
-        JABA.Calendar.addClickBtn("#menu", "prev", JABA.Calendar.refresh, new Date(updateDate.getFullYear(), updateDate.getMonth(), updateDate.getDate() - 7));
-        
-        // Från till datum
-        JABA.Calendar.addMenuDates(updateDate);                
-        
-        // Nästa vecka
-        JABA.Calendar.addClickBtn("#menu", "next", JABA.Calendar.refresh, new Date(updateDate.getFullYear(), updateDate.getMonth(), updateDate.getDate() + 7));                
-        
-        // Till idag
-        JABA.Calendar.addClickBtn("#menu", "today", JABA.Calendar.refresh, new Date());
-                
-        // Inställningar
-        JABA.Calendar.addClickBtn("#menu", "btnSetting", JABA.Calendar.settingsForm, updateDate);
-        
-        // måndag - söndag datum
-        JABA.Calendar.addHeaderDates();
-    },
-    
-    // lägger till knapp med click funktion
-    addClickBtn: function(whereData, classData, func, funcData, secFunc){
-        var $btn = $("<div></div>").appendTo(whereData);
-        $("<a href='#'></a>").addClass(classData).click(function(event){
-            event.preventDefault();
-            func(funcData);
-            if(secFunc){
-                secFunc();
-            }
-        }).appendTo($btn);
-    },
-    
-    // lägger till knapp med klass
-    addBtn: function(whereData, classData){
-        var $btn = $("<div></div>").appendTo(whereData);
-        return $("<a href='#'></a>").addClass(classData).appendTo($btn);
-    },
-    
-    // lägger till bokningar i veckovyn
-    getAjaxBookings: function(chosenDate){
+    // WEEK lägger till bokningar i veckovyn
+    getWeekBookings: function(chosenDate){
         
         var fYear = JABA.Calendar.daysOfWeek[0].year;
         var fMonth = JABA.Calendar.daysOfWeek[0].month;
@@ -290,8 +438,8 @@ JABA.Calendar = {
         });
     },
             
-    // funktion som skapar COLUMNER och RADER i kalendern
-    getCalDivs: function(){
+    // WEEK funktion som skapar COLUMNER och RADER i kalendern
+    getWeekDivs: function(){
         
         // skapa TIDscolumn och rows         
         var timeDiff = JABA.Calendar.endTime - JABA.Calendar.startTime + 1;
@@ -324,6 +472,42 @@ JABA.Calendar = {
                 
                 var $rowDiv = $("<div class='row' data-time='"+timeString+"' data-date='"+dateString+"'></div>").appendTo(col);                 
             }        
+        }
+    },
+    
+    // sätter färgerna för bokade dagar i månadsvyn
+    setMonthColors: function(chosenDate){
+        
+        var todayDate = new Date();
+        
+        var number;
+        var iterations = JABA.Calendar.iterations;        
+        
+        var firstDay = JABA.Calendar.firstDay;
+        var lastDay = JABA.Calendar.lastDay;
+        
+        for(var j = 2; j < iterations; j++){
+            
+            number = j - firstDay;
+            
+            if(number < 1 || number > lastDay){
+                number = "";              
+            }                         
+            
+            if($.isNumeric(number)){    
+
+                if(new Date(chosenDate.getFullYear(), chosenDate.getMonth(), number).setHours(0,0,0,0) == todayDate.setHours(0,0,0,0)){
+                    $("a[data-number="+number+"]").parent().addClass('isTodayDay');                    
+                }
+                
+                if(JABA.Calendar.monthBookingsArr[number].bookings.length > 0){
+                    $("a[data-number="+number+"]").parent().addClass('isBookedDay');
+                    
+                } else{                
+                    $("a[data-number="+number+"]").parent().addClass('isDayOfMonth');
+                    
+                }                
+            }                                    
         }
     },
     
@@ -363,12 +547,13 @@ JABA.Calendar = {
                             JABA.Calendar.getSettings();                                                                                                
                             
                             if($viewInput.val() == "Week"){
-                                JABA.Calendar.refresh(new Date(updateDate));
-                                JABA.Calendar.mode = "Week";
+                                JABA.Calendar.mode = "Week";                            
                             } else if($viewInput.val() == "Month"){
-                                JABA.Month.refreshMonth(new Date(updateDate));
-                                JABA.Calendar.mode = "Month";
-                            }
+                                JABA.Calendar.mode = "Month";                            
+                            }                            
+                            
+                            JABA.Calendar.refresh(new Date(updateDate));                                
+                            
                         });
                         
                     } else{
@@ -398,6 +583,102 @@ JABA.Calendar = {
         });                            
     },
     
+    // tar användaren till valfritt datum
+    goToDate: function(updateDate){
+        
+        var $overlay = $("<div id='overlay'></div>").prependTo("body");
+        
+        var $modal = $("<div id='modal'></div>").prependTo($overlay);
+        
+        $("<h2>Choose Date</h2>").appendTo($modal);
+        
+        var $form = $("<form action='' method='post'></form>").appendTo($modal);
+        
+        var $datePickLabel = $("<label for='datePick'>Date:</label>").appendTo($form);
+        var $datePickInput = $("<input type='text' name='datePick' id='datePick' placeholder='yyyy-mm-dd' maxlength='10'/>").appendTo($form);
+        
+        var bPattern = /^(19|2[0-9])[0-9][0-9]-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/;
+        
+        $datePickInput.change(function(){
+
+            if($datePickInput.val().match(bPattern)){
+                
+                // ändra så att det går att skicka
+                $datePickInput.removeClass("notValid");
+                $datePickLabel.text("Date: ");
+                $datePickLabel.removeClass("invLabel");
+            } else {
+                
+                // ändra så att det inte går att skicka                    
+                $datePickInput.addClass("notValid");
+                $datePickLabel.text("Date: use 'yyyy-mm-dd' format");
+                $datePickLabel.addClass("invLabel");
+            }
+        });
+        
+        $form.submit(function(event){
+            
+            event.preventDefault();
+            
+            var toDate = $datePickInput.val();
+            
+            if($("input.notValid").length == 0){
+                if(toDate == ""){
+                    toDate = updateDate;
+                }                                        
+                
+                JABA.Calendar.refresh(new Date(toDate));                    
+                $overlay.remove();   
+            }   
+            
+            else{
+                $datePickLabel.text("Date: use 'yyyy-mm-dd' format");
+                $datePickLabel.addClass("invLabel");
+            }
+        });
+                                
+        JABA.Calendar.addBtn($modal, "btnWeek").click(function(event){
+            event.preventDefault();
+            JABA.Calendar.mode = "Week";                
+            $form.submit();
+        });
+    
+        JABA.Calendar.addBtn($modal, "btnMonth").click(function(event){
+            event.preventDefault();
+            JABA.Calendar.mode = "Month";                
+            $form.submit();
+        });
+                
+        JABA.Calendar.addBtn($modal, "btnClose").click(function(event){
+            event.preventDefault();
+            $overlay.remove();
+        });
+    }, 
+    
+    // lägger till knapp med click funktion
+    addClickBtn: function(whereData, classData, func, funcData, secFunc){
+        var $btn = $("<div></div>").appendTo(whereData);
+        $("<a href='#'></a>").addClass(classData).click(function(event){
+            event.preventDefault();
+            func(funcData);
+            if(secFunc){
+                secFunc();
+            }
+        }).appendTo($btn);
+    },
+    
+    // lägger till knapp med klass
+    addBtn: function(whereData, classData){
+        var $btn = $("<div></div>").appendTo(whereData);
+        return $("<a href='#'></a>").addClass(classData).appendTo($btn);
+    },
+    
+    // ändrar inställningsläge till månad eller vecka
+    setMode: function(choice){
+        JABA.Calendar.mode = choice;
+    },
+    
+    // hämtar tidsintsällningar från servern
     getSettings: function(){        
         $.ajax({
             type: "get",
@@ -418,12 +699,16 @@ JABA.Calendar = {
     todayColNr: "",
     mode: "Month",
     daysOfWeek: [{dayStr: "Monday"}, {dayStr: "Tuesday"}, {dayStr: "Wednesday"}, {dayStr: "Thursday"}, {dayStr: "Friday"}, {dayStr: "Saturday"}, {dayStr: "Sunday"}],
-    daysOfMonth: []
+    daysOfMonth: [],
+    monthBookingsArr:[],
+    lastDay: 1,
+    firstday: 1,
+    iterations: 37
 };
 
 $(document).ready(function(){
     JABA.Calendar.getSettings();
-    JABA.Month.refreshMonth(new Date());
+    JABA.Calendar.refresh(new Date());
 });
 
 

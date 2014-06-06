@@ -59,10 +59,6 @@ input#bookingId:hover{
     margin:10px auto 20px auto;
 }
 
-#messages{
-
-}
-
 #menu{
     border:2px solid black;
     height:50px;
@@ -81,11 +77,6 @@ input#bookingId:hover{
     background-color:rgba(229, 214, 173, 0.57);
 }
 
-.todayMarking{
-    
-    background-color:#f2c373;
-}
-
 #calendar{
     height:600px;
     width:100%;
@@ -95,7 +86,7 @@ input#bookingId:hover{
     border-top:none;
 }
 
-#newBack, #overlay{
+#overlay{
     width:100%;
     height:100%;
     min-height:1300px;
@@ -105,7 +96,7 @@ input#bookingId:hover{
     z-index:1;
 }
 
-#newB, #modal{
+#modal{
     background-color:#FFEBBF;
     border:3px solid black;
     border-radius:5px;
@@ -115,27 +106,6 @@ input#bookingId:hover{
     top:130px;
     opacity:1;
     z-index:10;
-}
-
-#confirmBack{
-    bottom:0;
-    left:0;
-    right:0;
-    top:0;
-    position:fixed;
-    background-color:rgba(0, 0, 0, 0.3);
-    z-index:11;
-}
-
-#confirmDiv{
-    background-color:white;
-    border:3px solid black;
-    left:40%;
-    padding:15px;
-    position:fixed;
-    top:40%;
-    opacity:1;
-    z-index:20;
 }
 
 #bookingList{
@@ -200,128 +170,10 @@ input#bookingId:hover{
     width:9%;
 }
 
-
-
-#menu div a.setting, a.btnSetting{
-    background-image:url(../images/BtnSetting.png);
+.todayMarking{    
+    background-color:#f2c373;
 }
 
-#menu div a.setting:hover, a.btnSetting:hover{
-    background-image:url(../images/BtnSettingH.png);
-}
-
-#menu div a.new, a.btnNew{
-    background-image:url(../images/BtnAdd.png);
-}
-
-#menu div a.new:hover, a.btnNew:hover{
-    background-image:url(../images/BtnAddH.png);
-}
-
-#menu div a.today{
-    background-image:url(../images/BtnHouse.png);
-}
-
-#menu div a.today:hover{
-    background-image:url(../images/BtnHouseH.png);
-}
-
-#menu div a.prev{
-    background-image:url(../images/BtnPrev.png);
-}
-
-#menu div a.prev:hover{
-    background-image:url(../images/BtnPrevH.png);
-}
-
-#menu div a.next{
-    background-image:url(../images/BtnNext.png);
-}
-
-#menu div a.next:hover{
-    background-image:url(../images/BtnNextH.png);
-}
-
-#menu div a.list{
-    background-image:url(../images/BtnList.png);
-}
-
-#menu div a.list:hover{
-    background-image:url(../images/BtnListH.png);
-}
-
-a.btnSave, a.btnErase, a.btnClose, a.btnLogIn, a.btnLogOut, a.btnGoto, a.btnWeek, a.btnMonth{
-    width:55px;
-    height:30px;
-    display:block;
-    float:left;
-    margin:5px;
-    transition: background-image 0.2s ease-in-out;
-}
-
-a.btnSave{
-    background-image:url(../images/BtnSave.png);
-}
-
-a.btnSave:hover{
-    background-image:url(../images/BtnSaveH.png);
-}
-
-a.btnErase{
-    background-image:url(../images/BtnErase.png);
-}
-
-a.btnErase:hover{
-    background-image:url(../images/BtnEraseH.png);
-}
-
-a.btnClose{
-    background-image:url(../images/BtnClose.png);
-}
-
-a.btnClose:hover{
-    background-image:url(../images/BtnCloseH.png);
-}
-
-a.btnLogIn{
-    background-image:url(../images/BtnLogIn.png);
-}
-
-a.btnLogIn:hover{
-    background-image:url(../images/BtnLogInH.png);
-}
-
-a.btnLogOut{
-    background-image:url(../images/BtnLogOut.png);
-}
-
-a.btnLogOut:hover{
-    background-image:url(../images/BtnLogOutH.png);
-}
-
-a.btnGoto{
-    background-image:url(../images/BtnGoto.png);
-}
-
-a.btnGoto:hover{
-    background-image:url(../images/BtnGotoH.png);
-}
-
-a.btnWeek{
-    background-image:url(../images/BtnWeek.png);
-}
-
-a.btnWeek:hover{
-    background-image:url(../images/BtnWeekH.png);
-}
-
-a.btnMonth{
-    background-image:url(../images/BtnMonth.png);
-}
-
-a.btnMonth:hover{
-    background-image:url(../images/BtnMonthH.png);
-}
 
 .toFromDates, .monthDates{
     float:left;
@@ -405,7 +257,6 @@ a.btnMonth:hover{
     line-height:60px;
     text-align:center;
     border:1px dotted white;
-
 }
 
 .timeDate{
@@ -452,8 +303,6 @@ a.btnMonth:hover{
     overflow:hidden;
 }
 
-
-
 .messageClose{
     background-color:black;
     width:10px;
@@ -468,7 +317,6 @@ a.btnMonth:hover{
     padding:5px 0 0 5px;
 }
 
-
 .okMessage{ 
     background-color:rgba(85, 221, 85, 0.58);
     border-radius:5px;
@@ -477,8 +325,6 @@ a.btnMonth:hover{
 .badMessage{ 
     background-color:#F33;
 }
-
-
 
 .invLabel{
     color:red;
@@ -499,8 +345,6 @@ a.btnMonth:hover{
 .isBookedDay:hover{
     background-color:#ffd48b;
 }
-
-
 
 .todayCol{
     border-right:1px solid #9a722f;
@@ -596,5 +440,126 @@ a.btnMonth:hover{
     height:5px;
 }
 
+/* --- KNAPPAR --- */
+
+#menu div a.setting, a.btnSetting{
+    background-image:url(../images/BtnSetting.png);
+}
+
+#menu div a.setting:hover, a.btnSetting:hover{
+    background-image:url(../images/BtnSettingH.png);
+}
+
+#menu div a.new, a.btnNew{
+    background-image:url(../images/BtnAdd.png);
+}
+
+#menu div a.new:hover, a.btnNew:hover{
+    background-image:url(../images/BtnAddH.png);
+}
+
+#menu div a.today{
+    background-image:url(../images/BtnHouse.png);
+}
+
+#menu div a.today:hover{
+    background-image:url(../images/BtnHouseH.png);
+}
+
+#menu div a.prev{
+    background-image:url(../images/BtnPrev.png);
+}
+
+#menu div a.prev:hover{
+    background-image:url(../images/BtnPrevH.png);
+}
+
+#menu div a.next{
+    background-image:url(../images/BtnNext.png);
+}
+
+#menu div a.next:hover{
+    background-image:url(../images/BtnNextH.png);
+}
+
+#menu div a.list{
+    background-image:url(../images/BtnList.png);
+}
+
+#menu div a.list:hover{
+    background-image:url(../images/BtnListH.png);
+}
 
 
+a.btnSave, a.btnErase, a.btnClose, a.btnLogIn, a.btnLogOut, a.btnGoto, a.btnWeek, a.btnMonth{
+    width:55px;
+    height:30px;
+    display:block;
+    float:left;
+    margin:5px;
+    transition: background-image 0.2s ease-in-out;
+}
+
+a.btnSave{
+    background-image:url(../images/BtnSave.png);
+}
+
+a.btnSave:hover{
+    background-image:url(../images/BtnSaveH.png);
+}
+
+a.btnErase{
+    background-image:url(../images/BtnErase.png);
+}
+
+a.btnErase:hover{
+    background-image:url(../images/BtnEraseH.png);
+}
+
+a.btnClose{
+    background-image:url(../images/BtnClose.png);
+}
+
+a.btnClose:hover{
+    background-image:url(../images/BtnCloseH.png);
+}
+
+a.btnLogIn{
+    background-image:url(../images/BtnLogIn.png);
+}
+
+a.btnLogIn:hover{
+    background-image:url(../images/BtnLogInH.png);
+}
+
+a.btnLogOut{
+    background-image:url(../images/BtnLogOut.png);
+}
+
+a.btnLogOut:hover{
+    background-image:url(../images/BtnLogOutH.png);
+}
+
+a.btnGoto{
+    background-image:url(../images/BtnGoto.png);
+}
+
+a.btnGoto:hover{
+    background-image:url(../images/BtnGotoH.png);
+}
+
+a.btnWeek{
+    background-image:url(../images/BtnWeek.png);
+}
+
+a.btnWeek:hover{
+    background-image:url(../images/BtnWeekH.png);
+}
+
+a.btnMonth{
+    background-image:url(../images/BtnMonth.png);
+}
+
+a.btnMonth:hover{
+    background-image:url(../images/BtnMonthH.png);
+}

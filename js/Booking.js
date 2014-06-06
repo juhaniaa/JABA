@@ -3,7 +3,7 @@ var JABA = JABA || {};
 
 JABA.Booking = function(bId, bName, bDate, bTime, bDesc){
     
-    /* Lägg till bokningen som en a-tag på rätt plats i veckovyn */
+    /* Lägg till bokningen som en a-tag på rätt plats i kalendern */
     var bRow = bTime - JABA.Calendar.startTime;
     var bCol = new Date(bDate).getDay() - 1; 
     var bSquare = $("#calendar .column:eq(" + bCol + ") .row").eq(bRow).addClass("appointed");    
@@ -14,8 +14,16 @@ JABA.Booking = function(bId, bName, bDate, bTime, bDesc){
     }).appendTo(bSquare);
 };
 
-
-JABA.Booking.BookingForm = function(ifOld, bId, bName, bDate, bTime, bDesc, ifMonth){
+// skapar ett formulär för att skapa eller ändra en bokning
+JABA.Booking.BookingForm = function(ifOld, bId, bName, bDate, bTime, bDesc){
+    
+    var ifMonth;
+    
+    if(JABA.Calendar.mode == "Month"){
+        ifMonth == true;
+    } else if(JABA.Calendar.mode == "Week"){
+        ifMonth == false;
+    }
     
     function createFormPiece(name, bValue, bLength, bPattern, bHolder, bMessage){
         
@@ -29,16 +37,13 @@ JABA.Booking.BookingForm = function(ifOld, bId, bName, bDate, bTime, bDesc, ifMo
             
             /* inmatad info måste matcha med regex
             inmatad tid måste passa in i aktuella tidsinställningarna
-            och inmatad tid får inte redan vara bokad */                                
-            
+            och inmatad tid får inte redan vara bokad */                                            
             if($(this).val().match(bPattern) && checkTimeBoundaries($(this).val())){
+                
                 // OK att skicka
                 $(this).removeClass("notValid");
                 $label.text(name);
-                $label.removeClass("invLabel");
-                
-                console.log((!$("input[id=newDate]").hasClass("notValid") && !$("input[id=newTime]").hasClass("notValid")));
-                console.log(!$("input[id=newDate]").hasClass("notValid"));
+                $label.removeClass("invLabel");            
                 
                 /* Om man ändrar datum eller tid */
                 if(($input.is("input[id=newDate]") || $input.is("input[id=newTime]")) && (!$("input[id=newDate]").hasClass("notValid") && !$("input[id=newTime]").hasClass("notValid"))){
@@ -48,10 +53,8 @@ JABA.Booking.BookingForm = function(ifOld, bId, bName, bDate, bTime, bDesc, ifMo
                     JABA.Booking.AlreadyBooked($("input[id=newDate]").val(),$("input[id=newTime]").val(), bDate, bTime, ifMonth, bId);
                     if(!JABA.Calendar.isBooked){                    
                         // giltig förklara
-                        //$("input[id=newDate]").removeClass("notAvailable");
                         $("label[id=labelDate]").text("Date");
                         $("label[id=labelDate]").removeClass("invLabel");
-                        //$("input[id=newTime]").removeClass("notAvailable");
                         $("label[id=labelTime]").text("Time");
                         $("label[id=labelTime]").removeClass("invLabel");
                     } else{
@@ -69,35 +72,17 @@ JABA.Booking.BookingForm = function(ifOld, bId, bName, bDate, bTime, bDesc, ifMo
                 $label.addClass("invLabel");
             }           
             
-            
-            
         });
         
         function checkTimeBoundaries(timeValue){
             
-            /* Då datumet ändras 
-            if($input.is("input[id=newDate]")){                
-                JABA.Booking.AlreadyBooked($("input[id=newDate]").val(),$("input[id=newTime]").val(), bDate, bTime, ifMonth, bId);
-                if(!JABA.Calendar.isBooked){
-                    return true;
-                } else {
-                    return false;
-                }
-            }*/
-            
             /* Då tiden ändras */
             if($input.is("input[id=newTime]")){
-                if(parseInt(JABA.Calendar.startTime) <= timeValue && timeValue <= parseInt(JABA.Calendar.endTime)){
-                    
-                    /*JABA.Booking.AlreadyBooked($("input[id=newDate]").val(),$("input[id=newTime]").val(), bDate, bTime, ifMonth, bId);       
-                    
-                    if(!JABA.Calendar.isBooked){
-                        return true;
-                    } else {return false;}*/
+                if(parseInt(JABA.Calendar.startTime) <= timeValue && timeValue <= parseInt(JABA.Calendar.endTime)){                                        
                     return true;
                 } else {return false;}
             } else {
-                /* Om varken tid eller datum ändras så kontrolleras ej om redan bokad */
+                
                 return true;
             }
         }                        
@@ -112,8 +97,8 @@ JABA.Booking.BookingForm = function(ifOld, bId, bName, bDate, bTime, bDesc, ifMo
         });            
     }    
     
-    var $overlay = $("<div id='newBack'></div>").prependTo("body");    
-    var $modal = $("<div id='newB'></div>").prependTo($overlay);
+    var $overlay = $("<div id='overlay'></div>").prependTo("body");    
+    var $modal = $("<div id='modal'></div>").prependTo($overlay);
     
     var postInfo = "php/newBooking.php";
     var headerInfo = "New Booking";
@@ -145,17 +130,15 @@ JABA.Booking.BookingForm = function(ifOld, bId, bName, bDate, bTime, bDesc, ifMo
                 }).done(function(data){
                     
                     if(Date.parse(data)){                                               
-                        if(ifMonth){                            
-                            JABA.Month.refreshMonth(new Date(data));                            
-                        } else{                            
-                            JABA.Calendar.refresh(new Date(data));                                
-                        }                        
+
+                        JABA.Calendar.refresh(new Date(data));                                
+                                                
                         new JABA.Message("Booking has been saved", "okMessage");
                         
                     }else{                        
                         new JABA.Message("Something went wrong", "badMessage");
                     }
-                    /* Stäng fönstret */                    
+                                       
                     $overlay.remove();
                 });   
             }
@@ -188,45 +171,45 @@ JABA.Booking.BookingForm = function(ifOld, bId, bName, bDate, bTime, bDesc, ifMo
     createFormPiece("Time", bTime, 2, /^([0-9]|[01][0-9]|2[0-3])$/, "Time", " " + JABA.Calendar.startTime + "-" + JABA.Calendar.endTime);
     createFormPiece("Description", bDesc, 30, /^[\w åäöÅÄÖ]{3,30}$/, "Description", " 3-20 characters");
     
-    
-    
     /* save BUTTON */
-    var $saveBtn = $("<div></div>").appendTo($modal);
-    $("<a href='#'></a>").addClass("btnSave").click(function(event){
+    JABA.Calendar.addBtn($modal, "btnSave").click(function(event){
         event.preventDefault();
         $bForm.submit();
-    }).appendTo($saveBtn);
+    });
+    
     
     /* erase BUTTON */
-    if(ifOld){        
-        var $eraseBtn = $("<div></div>").appendTo($modal);        
-        $("<a href='#'></a>").addClass("btnErase").click(function(event){            
+    if(ifOld){ 
+        JABA.Calendar.addBtn($modal, "btnErase").click(function(event){            
             event.preventDefault();
             $overlay.remove();
             
-            $.post("php/eraseBooking.php",{bookingId:bId},function(data){                
-                if(ifMonth){                    
+            $.post("php/eraseBooking.php",{bookingId:bId},function(data){  
+                
+                JABA.Calendar.refresh(new Date(bDate));
+                
+                /*if(ifMonth){                    
                     JABA.Month.refreshMonth(new Date(bDate));
                 } else{                    
                     JABA.Calendar.refresh(new Date(bDate));
-                }
+                }*/
             });            
             new JABA.Message("Booking has been erased", "okMessage");
-        }).appendTo($eraseBtn);
+        });                
     }
     
-    /* cancel BUTTON */
-    var $cancelBtn = $("<div></div>").appendTo($modal);
-    $("<a href='#'></a>").addClass("btnClose").click(function(event){
+    
+    /* close BUTTON */
+    JABA.Calendar.addBtn($modal, "btnClose").click(function(event){
         event.preventDefault();
         $overlay.remove();
-    }).appendTo($cancelBtn);
+    });        
 };
 
+// ger en lista på kommande bokningar
 JABA.Booking.BookingList = function(){
-        
-        
-        var $overlay = $("<div id='newBack'></div>").prependTo("body");;
+                
+        var $overlay = $("<div id='overlay'></div>").prependTo("body");;
                 
         // listan läggs till i $modal
         var $modal = $("<div id='bookingList'></div>").prependTo($overlay);   
@@ -264,15 +247,16 @@ JABA.Booking.BookingList = function(){
                                 
             });
             
-            var $closeButton = $("<div></div>").appendTo($modal);
-            $("<a href='#'></a>").addClass("btnClose").click(function(event){
+            JABA.Calendar.addBtn($modal, "btnClose").click(function(event){
                 event.preventDefault();
                 $overlay.remove();
-            }).appendTo($closeButton); 
+            });
+                         
             
         }, 'json');                                        
 };
 
+// kontrollerar om en bokningstid + datum redan är upptagen
 JABA.Booking.AlreadyBooked = function(bDate, bTime, preDate, preTime, isMonth, bId){
     
     var result;
