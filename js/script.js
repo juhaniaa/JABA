@@ -70,16 +70,6 @@ JABA.Calendar = {
             JABA.Calendar.daysOfWeek[i].day = day.toString();                        
         }                
     },
-    
-    // UNDER KONSTRUKTION används ej
-    getMonthDates: function(chosenDate){
-        for(var k = 0; k < 32; k++){
-            
-            JABA.Calendar.daysOfMonth.push({
-                bookings: [],
-            });            
-        }  
-    },
               
     // lägger till menyn
     addMenu: function(updateDate){

@@ -40,6 +40,4 @@ test("AT 1.2 Mode", function(){
     ok(JABA.Calendar.mode === "Month", "Ändring till månad");
 });
 
-test("hello test", function(){
-    ok(1 == "1", "Passed!");
-});
+
