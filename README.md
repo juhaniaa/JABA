@@ -10,4 +10,6 @@ För att testköra applikationen:
     
 Referat till Software Craftmanship föreläsningen som jag missade vid ursprungstillfället finns i katalogen docs
 
+Länk till google drive dokument: https://drive.google.com/folderview?id=0Bx3RpIemwJ8PVGtBN2ZjUGJ0bnM&usp=sharing
+
 ja222qm Juhani Aavanen 2014
